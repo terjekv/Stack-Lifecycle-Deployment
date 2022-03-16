@@ -21,7 +21,7 @@ check_docker () {
         echo 'sudo chmod +x /usr/local/bin/docker-compose'
         exit 1
     fi
-    /usr/bin/which $DOCKER_CMD /dev/null
+    /usr/bin/which $DOCKER_CMD > /dev/null
     if [ $? = 0 ];then
         echo "docker ok"
     else
