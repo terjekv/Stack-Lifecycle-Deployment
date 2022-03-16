@@ -1,8 +1,19 @@
 #!/bin/bash
+
+DOCKER_CMD=docker
+DOCKER_COMPOSE_CMD=docker-compose
+
+check_podman() {
+    if /usr/bin/which podman > /dev/null; then
+        DOCKER_CMD=podman
+        DOCKER_COMPOSE_CMD=podman-compose
+    fi
+}
+
 check_docker () {
-    /usr/bin/which docker-compose >/dev/null
+    /usr/bin/which $DOCKER_COMPOSE_CMD > /dev/null
     if [ $? = 0 ];then
-        echo "docker-compse ok"
+        echo "docker-compose ok"
     else
         echo "Docker Compose not installed"
         echo "Run this command to download the current stable release of Docker Compose:"
@@ -10,7 +21,7 @@ check_docker () {
         echo 'sudo chmod +x /usr/local/bin/docker-compose'
         exit 1
     fi
-    /usr/bin/which docker > /dev/null
+    /usr/bin/which $DOCKER_CMD /dev/null
     if [ $? = 0 ];then
         echo "docker ok"
     else
@@ -21,21 +32,20 @@ check_docker () {
     fi
 }
 
-
 start_db_redis_rabbit() {
-    docker-compose up -d  db redis rabbit
+    $DOCKER_COMPOSE_CMD up -d  db redis rabbit
     sleep 15
 }
 
 
 start_backend() {
-    docker-compose up -d --remove-orphan api-backend worker remote-state
+    $DOCKER_COMPOSE_CMD up -d --remove-orphan api-backend worker remote-state
     sleep 10
 }
 
 
 start_frontend() {
-    docker-compose up -d --remove-orphan sld-dashboard schedule
+    $DOCKER_COMPOSE_CMD up -d --remove-orphan sld-dashboard schedule
 }
 
 
@@ -69,6 +79,7 @@ start_init_credentials() {
             echo '---------------------------------------------'
         }
     # Check requirement
+    check_podman
     check_docker
 
     echo
