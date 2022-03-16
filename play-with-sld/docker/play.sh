@@ -97,17 +97,17 @@ start_init_credentials() {
                 ;;
 
             stop)   echo "Stoping SLD for play"
-                docker-compose down
+                $DOCKER_COMPOSE_CMD down
                 ;;
 
             logs)   echo "CRL+C for escape"
                 sleep 3
-                docker-compose logs -f
+                $DOCKER_COMPOSE_CMD logs -f
                 ;;
 
             list)   echo "List endpoints"
-                docker-compose ps|awk '{print $1,":", "http://"$7}' |awk -F"-" '{print $2}' |grep dash
-                docker-compose ps|awk '{print $1,":", "http://"$8}' |awk -F">" '{print $1}'|sed 's/.$//'|grep api
+                $DOCKER_COMPOSE_CMD ps|awk '{print $1,":", "http://"$7}' |awk -F"-" '{print $2}' |grep dash
+                $DOCKER_COMPOSE_CMD ps|awk '{print $1,":", "http://"$8}' |awk -F">" '{print $1}'|sed 's/.$//'|grep api
                 ;;
 
             init)   echo "init SLD"
